@@ -1,0 +1,1 @@
+Get -> /users/abc (where abc is username) -> { id, username, email } "200"
