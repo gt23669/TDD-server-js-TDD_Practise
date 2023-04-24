@@ -3,7 +3,7 @@ import sinon from "sinon";
 import request from "supertest";
 import db from "./db";
 import { app } from "./server";
-import expect from "chai";
+import { expect } from "chai";
 
 describe('GET /users/:username', () => {
     it('send correct response when a user with the username is found', async () => {
@@ -26,6 +26,21 @@ describe('GET /users/:username', () => {
 
         //On the first call of the stub, we expect the argument passed to be 'abc'
         expect(stub.getCall(0).args[0]).to.equal('abc')
+        stub.restore()
+    });
+
+    it('sends the correct response when there is an error', async () => {
+        const fakeError = {
+            message: 'Something went wrong'
+        }
+        const stub = sinon.stub(db, 'getUserByUsername')
+            .throws(fakeError)
+
+        await request(app).get('/users/abc')
+            .expect(500)
+            .expect('Content-Type', /json/)
+            .expect(fakeError)
+
         stub.restore()
     });
 })
