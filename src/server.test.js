@@ -31,7 +31,7 @@ describe('GET /users/:username', () => {
 
     it('sends the correct response when there is an error', async () => {
         const fakeError = {
-            message: 'Something went wrong'
+            status: 500
         }
         const stub = sinon.stub(db, 'getUserByUsername')
             .throws(fakeError)
@@ -39,7 +39,22 @@ describe('GET /users/:username', () => {
         await request(app).get('/users/abc')
             .expect(500)
             .expect('Content-Type', /json/)
-            .expect(fakeError)
+            .expect('"Internal Server Error"')
+
+        stub.restore()
+    });
+
+    it('returns the appropriate response when the user is not found', async () => {
+        const fakeError = {
+            status: 404
+        }
+        const stub = sinon.stub(db, 'getUserByUsername')
+            .throws(fakeError)
+
+        await request(app).get('/users/badUser')
+            .expect(404)
+            .expect('Content-Type', /json/)
+            .expect('')
 
         stub.restore()
     });
