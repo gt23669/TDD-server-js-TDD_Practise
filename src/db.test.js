@@ -40,7 +40,6 @@ describe('getUserByUsername', () => {
     });
 
     it('returns null when user is not found', async () => {
-        const expected = {}
         const actual = await getUserByUsername('badUser')
 
         expect(actual).to.be.null

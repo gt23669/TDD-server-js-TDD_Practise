@@ -48,6 +48,7 @@ describe('GET /users/:username', () => {
         const fakeError = {
             status: 404
         }
+        //could instead use .resolves(null) than .throws since we know this is how it should behave
         const stub = sinon.stub(db, 'getUserByUsername')
             .throws(fakeError)
 
